@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Store } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Navbar } from "@/components/navbar";
@@ -30,13 +31,18 @@ export default function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary to-blue-600 text-white py-16">
+      <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6" data-testid="title-hero">
+          <div className="mb-4">
+            <span className="inline-block bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium text-white/90 mb-4">
+              For IISER Bhopal Students
+            </span>
+          </div>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent" data-testid="title-hero">
             Student Marketplace
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-blue-100" data-testid="text-hero-subtitle">
-            Buy and sell hostel items with fellow students
+          <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto" data-testid="text-hero-subtitle">
+            Buy and sell hostel items with fellow IISER students. Your trusted campus marketplace.
           </p>
           <div className="relative h-64 md:h-96 rounded-2xl overflow-hidden mx-auto max-w-4xl">
             <img 
@@ -62,19 +68,19 @@ export default function Home() {
         </div>
 
         {/* Search and Filter */}
-        <div className="mb-8 flex flex-col md:flex-row gap-4">
+        <div className="mb-8 flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <Input 
               type="text" 
               placeholder="Search items..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full"
+              className="w-full h-12 text-base border-2 border-gray-200 focus:border-blue-500 rounded-lg"
               data-testid="input-search"
             />
           </div>
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-full md:w-48" data-testid="select-filter-category">
+            <SelectTrigger className="w-full sm:w-48 h-12 border-2 border-gray-200 focus:border-blue-500 rounded-lg" data-testid="select-filter-category">
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
@@ -92,23 +98,29 @@ export default function Home() {
 
         {/* Product Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => (
-              <div key={i} className="bg-white rounded-xl shadow-md p-4 animate-pulse" data-testid={`skeleton-product-${i}`}>
-                <div className="w-full h-48 bg-gray-200 rounded mb-4"></div>
+              <div key={i} className="bg-white rounded-xl shadow-lg p-6 animate-pulse" data-testid={`skeleton-product-${i}`}>
+                <div className="w-full h-48 bg-gray-200 rounded-lg mb-4"></div>
                 <div className="h-4 bg-gray-200 rounded mb-2"></div>
                 <div className="h-6 bg-gray-200 rounded mb-2"></div>
                 <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                <div className="h-10 bg-gray-200 rounded"></div>
+                <div className="h-12 bg-gray-200 rounded-lg"></div>
               </div>
             ))}
           </div>
         ) : filteredProducts.length === 0 ? (
-          <div className="text-center py-12" data-testid="empty-state-products">
-            <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
+          <div className="text-center py-16" data-testid="empty-state-products">
+            <div className="max-w-md mx-auto">
+              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Store className="w-12 h-12 text-gray-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
+              <p className="text-gray-500 text-base">Try adjusting your search or filter criteria.</p>
+            </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-16">
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -121,9 +133,9 @@ export default function Home() {
             <h2 className="text-3xl font-bold text-gray-900 mb-8" data-testid="title-item-requests">
               Item Requests
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {requests.map((request: any) => (
-                <div key={request.id} className="bg-white rounded-xl shadow-md p-6" data-testid={`card-request-${request.id}`}>
+                <div key={request.id} className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300" data-testid={`card-request-${request.id}`}>
                   <h3 className="font-semibold text-lg mb-2" data-testid={`text-request-title-${request.id}`}>
                     {request.title}
                   </h3>
@@ -160,7 +172,7 @@ export default function Home() {
               Making hostel life easier, one transaction at a time
             </p>
             <div className="text-sm text-gray-500" data-testid="text-footer-copyright">
-              © 2024 HostelMart. Built for students, by students.
+              © 2025 HostelMart. Built for IISER Bhopal students, by students.
             </div>
           </div>
         </div>

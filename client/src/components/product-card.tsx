@@ -15,8 +15,8 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <Card className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden" data-testid={`card-product-${product.id}`}>
-      <div className="aspect-video overflow-hidden">
+    <Card className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 hover:-translate-y-1" data-testid={`card-product-${product.id}`}>
+      <div className="aspect-video overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
         <img 
           src={product.images?.[0] || "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300"} 
           alt={product.name}
@@ -63,11 +63,11 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
         <Button 
           onClick={handleContactSeller}
-          className="w-full bg-secondary hover:bg-secondary/90"
+          className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-semibold py-3 shadow-md hover:shadow-lg transition-all duration-200"
           data-testid={`button-contact-${product.id}`}
         >
           <i className="fab fa-whatsapp mr-2"></i>
-          Contact Seller
+          Contact on WhatsApp
         </Button>
       </CardContent>
     </Card>

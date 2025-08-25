@@ -133,16 +133,21 @@ export default function Admin() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-gradient-to-r from-slate-900 to-slate-800 shadow-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center space-x-2">
-              <Store className="h-8 w-8 text-primary" />
-              <span className="text-2xl font-bold text-primary">HostelMart Admin</span>
+          <div className="flex justify-between items-center h-20">
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="bg-blue-600 p-2 rounded-lg">
+                <Store className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <span className="text-2xl font-bold text-white">HostelMart</span>
+                <div className="text-sm text-slate-300">Admin Dashboard</div>
+              </div>
             </Link>
             
             <Link href="/">
-              <Button variant="outline" className="flex items-center gap-2" data-testid="button-logout">
+              <Button variant="outline" className="flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20" data-testid="button-logout">
                 <LogOut className="h-4 w-4" />
                 Back to Home
               </Button>
@@ -154,64 +159,75 @@ export default function Admin() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6" data-testid="title-admin-dashboard">
-            Admin Dashboard
-          </h1>
+          <div className="mb-6">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2" data-testid="title-admin-dashboard">
+              Dashboard Overview
+            </h1>
+            <p className="text-gray-600">Manage HostelMart for IISER Bhopal students</p>
+          </div>
 
           {/* Dashboard Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <Card>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Total Products</p>
-                    <p className="text-3xl font-bold text-primary" data-testid="stat-total-products">
+                    <p className="text-sm font-medium text-blue-700">Total Products</p>
+                    <p className="text-3xl font-bold text-blue-900" data-testid="stat-total-products">
                       {stats?.totalProducts || 0}
                     </p>
                   </div>
-                  <Package className="h-8 w-8 text-primary opacity-75" />
+                  <div className="bg-blue-600 p-3 rounded-full">
+                    <Package className="h-8 w-8 text-white" />
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Pending Requests</p>
-                    <p className="text-3xl font-bold text-accent" data-testid="stat-pending-requests">
+                    <p className="text-sm font-medium text-orange-700">Pending Requests</p>
+                    <p className="text-3xl font-bold text-orange-900" data-testid="stat-pending-requests">
                       {stats?.pendingRequests || 0}
                     </p>
                   </div>
-                  <Clock className="h-8 w-8 text-accent opacity-75" />
+                  <div className="bg-orange-600 p-3 rounded-full">
+                    <Clock className="h-8 w-8 text-white" />
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Active Sellers</p>
-                    <p className="text-3xl font-bold text-secondary" data-testid="stat-active-sellers">
+                    <p className="text-sm font-medium text-emerald-700">Active Sellers</p>
+                    <p className="text-3xl font-bold text-emerald-900" data-testid="stat-active-sellers">
                       {stats?.activeSellers || 0}
                     </p>
                   </div>
-                  <Users className="h-8 w-8 text-secondary opacity-75" />
+                  <div className="bg-emerald-600 p-3 rounded-full">
+                    <Users className="h-8 w-8 text-white" />
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">Total Value</p>
-                    <p className="text-3xl font-bold text-green-600" data-testid="stat-total-value">
+                    <p className="text-sm font-medium text-purple-700">Total Value</p>
+                    <p className="text-3xl font-bold text-purple-900" data-testid="stat-total-value">
                       {stats?.totalValue ? formatCurrency(stats.totalValue) : "₹0"}
                     </p>
                   </div>
-                  <IndianRupee className="h-8 w-8 text-green-600 opacity-75" />
+                  <div className="bg-purple-600 p-3 rounded-full">
+                    <IndianRupee className="h-8 w-8 text-white" />
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -220,9 +236,11 @@ export default function Admin() {
           {/* Admin Tables */}
           <div className="space-y-8">
             {/* Products Table */}
-            <Card>
-              <CardHeader>
-                <CardTitle data-testid="title-products-management">Products Management</CardTitle>
+            <Card className="shadow-lg border-0">
+              <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b">
+                <CardTitle className="text-xl font-bold text-gray-900" data-testid="title-products-management">
+                  Products Management
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
@@ -287,9 +305,11 @@ export default function Admin() {
             </Card>
 
             {/* Requests Table */}
-            <Card>
-              <CardHeader>
-                <CardTitle data-testid="title-item-requests">Item Requests</CardTitle>
+            <Card className="shadow-lg border-0">
+              <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b">
+                <CardTitle className="text-xl font-bold text-gray-900" data-testid="title-item-requests">
+                  Item Requests
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
@@ -353,9 +373,11 @@ export default function Admin() {
             </Card>
 
             {/* Suggestions Table */}
-            <Card>
-              <CardHeader>
-                <CardTitle data-testid="title-user-suggestions">User Suggestions</CardTitle>
+            <Card className="shadow-lg border-0">
+              <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-50 border-b">
+                <CardTitle className="text-xl font-bold text-gray-900" data-testid="title-user-suggestions">
+                  User Suggestions
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
