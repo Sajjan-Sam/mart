@@ -30,7 +30,7 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <Card className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 hover:-translate-y-1" data-testid={`card-product-${product.id}`}>
+    <Card className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-300 hover:-translate-y-2 group" data-testid={`card-product-${product.id}`}>
       <div className="aspect-video overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 relative group cursor-pointer" onClick={handleImageClick}>
         <img 
           src={product.images?.[0] || "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300"} 

@@ -27,22 +27,27 @@ export default function Home() {
   }) || [];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="mb-4">
-            <span className="inline-block bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium text-white/90 mb-4">
-              For IISER Bhopal Students
+      <section className="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white py-24 relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/10 to-cyan-600/20"></div>
+        <div className="absolute top-10 left-10 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <div className="mb-6">
+            <span className="inline-block bg-gradient-to-r from-blue-500/30 to-cyan-500/30 backdrop-blur-sm rounded-full px-6 py-3 text-base font-semibold text-white/95 mb-4 border border-white/20 shadow-lg">
+              🎓 For IISER Bhopal Students
             </span>
           </div>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent" data-testid="title-hero">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 bg-gradient-to-r from-white via-blue-100 to-cyan-200 bg-clip-text text-transparent drop-shadow-2xl" data-testid="title-hero">
             HostelMart
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto" data-testid="text-hero-subtitle">
-            Buy & Sell hostel items with fellow IISER students. Your trusted campus marketplace.
+          <p className="text-2xl md:text-3xl mb-10 text-blue-100 max-w-4xl mx-auto font-light leading-relaxed" data-testid="text-hero-subtitle">
+            Buy & Sell hostel items with fellow IISER students. <br />
+            <span className="text-cyan-200 font-medium">Your trusted campus marketplace.</span>
           </p>
           <div className="relative h-64 md:h-96 rounded-2xl overflow-hidden mx-auto max-w-4xl">
             <img 
@@ -58,40 +63,40 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900" data-testid="title-available-items">
-            Available Items
+        <div className="flex justify-between items-center mb-10">
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent" data-testid="title-available-items">
+            🛒 Available Items
           </h2>
-          <div className="text-sm text-gray-600" data-testid="text-items-count">
-            {filteredProducts.length} items available
+          <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-6 py-3 rounded-full font-semibold shadow-lg" data-testid="text-items-count">
+            {filteredProducts.length} items
           </div>
         </div>
 
         {/* Search and Filter */}
-        <div className="mb-8 flex flex-col sm:flex-row gap-4">
+        <div className="mb-8 flex flex-col sm:flex-row gap-6">
           <div className="flex-1">
             <Input 
               type="text" 
-              placeholder="Search items..." 
+              placeholder="🔍 Search amazing items..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full h-12 text-base border-2 border-gray-200 focus:border-blue-500 rounded-lg"
+              className="w-full h-14 text-base border-2 border-gray-200 focus:border-blue-500 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm"
               data-testid="input-search"
             />
           </div>
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-full sm:w-48 h-12 border-2 border-gray-200 focus:border-blue-500 rounded-lg" data-testid="select-filter-category">
+            <SelectTrigger className="w-full sm:w-48 h-14 border-2 border-gray-200 focus:border-blue-500 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm" data-testid="select-filter-category">
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="books">Books</SelectItem>
-              <SelectItem value="furniture">Furniture</SelectItem>
-              <SelectItem value="appliances">Appliances</SelectItem>
-              <SelectItem value="clothing">Clothing</SelectItem>
-              <SelectItem value="sports">Sports</SelectItem>
-              <SelectItem value="stationery">Stationery</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
+              <SelectItem value="all">🏷️ All Categories</SelectItem>
+              <SelectItem value="books">📚 Books</SelectItem>
+              <SelectItem value="furniture">🪑 Furniture</SelectItem>
+              <SelectItem value="appliances">⚡ Appliances</SelectItem>
+              <SelectItem value="clothing">👕 Clothing</SelectItem>
+              <SelectItem value="sports">⚽ Sports</SelectItem>
+              <SelectItem value="stationery">✏️ Stationery</SelectItem>
+              <SelectItem value="other">📦 Other</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -130,8 +135,8 @@ export default function Home() {
         {/* Approved Requests Section */}
         {requests && requests.length > 0 && (
           <section className="mt-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8" data-testid="title-item-requests">
-              Item Requests
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent mb-10" data-testid="title-item-requests">
+              📋 Item Requests
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {requests.map((request: any) => (
@@ -162,17 +167,26 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <footer className="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white py-16 mt-20 relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/5 to-cyan-600/10"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-400/5 rounded-full blur-3xl"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
-            <div className="text-2xl font-bold mb-4" data-testid="text-footer-title">
+            <div className="text-4xl font-black mb-6 bg-gradient-to-r from-white via-blue-200 to-cyan-200 bg-clip-text text-transparent" data-testid="text-footer-title">
               HostelMart
             </div>
-            <p className="text-gray-400 mb-4" data-testid="text-footer-subtitle">
-              Making hostel life easier, one transaction at a time
+            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto font-light" data-testid="text-footer-subtitle">
+              Making hostel life easier, one transaction at a time. 
+              <br />
+              <span className="text-cyan-200 font-medium">Connect • Buy • Sell • Thrive</span>
             </p>
-            <div className="text-sm text-gray-500" data-testid="text-footer-copyright">
-              © 2025 HostelMart. Built for IISER Bhopal students, by students.
+            <div className="inline-block bg-white/10 backdrop-blur-sm rounded-full px-8 py-4 border border-white/20">
+              <div className="text-base text-blue-100 font-medium" data-testid="text-footer-copyright">
+                © 2025 HostelMart. Built for IISER Bhopal students, by students. 💙
+              </div>
             </div>
           </div>
         </div>

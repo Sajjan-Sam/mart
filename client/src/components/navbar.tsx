@@ -16,50 +16,53 @@ export function Navbar() {
 
   return (
     <>
-      <header className="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-100">
+      <header className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 shadow-2xl sticky top-0 z-50 border-b border-blue-800 backdrop-blur-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center space-x-2">
-              <Store className="h-8 w-8 text-primary" />
-              <span className="text-2xl font-bold text-primary">HostelMart</span>
+          <div className="flex justify-between items-center h-18">
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="bg-gradient-to-br from-blue-400 to-cyan-400 p-2.5 rounded-xl shadow-lg">
+                <Store className="h-8 w-8 text-white" />
+              </div>
+              <span className="text-2xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+                HostelMart
+              </span>
             </Link>
             
-            <div className="hidden md:flex items-center space-x-4">
+            <div className="hidden md:flex items-center space-x-3">
               <Button 
                 onClick={() => setIsSellModalOpen(true)}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold"
+                className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold px-6 py-2.5 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
                 data-testid="button-sell-item"
               >
-                Sell Item
+                💰 Sell Item
               </Button>
               <Button 
                 onClick={() => setIsRequestModalOpen(true)}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold px-6 py-2.5 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
                 data-testid="button-request-item"
               >
-                Request Item
+                🔍 Request Item
               </Button>
               <Button 
                 onClick={() => setIsSuggestionModalOpen(true)}
-                className="bg-orange-600 hover:bg-orange-700 text-white"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2.5 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
                 data-testid="button-suggestions"
               >
-                Suggestions
+                💡 Suggestions
               </Button>
               <Button 
-                variant="ghost"
                 onClick={() => setIsAdminLoginModalOpen(true)}
-                className="hover:bg-gray-100"
+                className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold px-6 py-2.5 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
                 data-testid="button-admin-login"
               >
-                Admin
+                🛡️ Admin
               </Button>
             </div>
 
             <Button
               variant="ghost"
               size="sm"
-              className="md:hidden"
+              className="md:hidden text-white hover:bg-white/10"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               data-testid="button-mobile-menu"
             >
@@ -68,48 +71,47 @@ export function Navbar() {
           </div>
 
           {isMobileMenuOpen && (
-            <div className="md:hidden border-t border-gray-200 py-4">
-              <div className="space-y-3">
+            <div className="md:hidden border-t border-blue-800/50 py-6 bg-slate-900/95 backdrop-blur-lg">
+              <div className="space-y-4">
                 <Button 
                   onClick={() => {
                     setIsSellModalOpen(true);
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold"
+                  className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold py-3 shadow-lg"
                   data-testid="button-mobile-sell-item"
                 >
-                  Sell Item
+                  💰 Sell Item
                 </Button>
                 <Button 
                   onClick={() => {
                     setIsRequestModalOpen(true);
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+                  className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-3 shadow-lg"
                   data-testid="button-mobile-request-item"
                 >
-                  Request Item
+                  🔍 Request Item
                 </Button>
                 <Button 
                   onClick={() => {
                     setIsSuggestionModalOpen(true);
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 shadow-lg"
                   data-testid="button-mobile-suggestions"
                 >
-                  Suggestions
+                  💡 Suggestions
                 </Button>
                 <Button 
-                  variant="outline"
                   onClick={() => {
                     setIsAdminLoginModalOpen(true);
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full"
+                  className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold py-3 shadow-lg"
                   data-testid="button-mobile-admin-login"
                 >
-                  Admin Login
+                  🛡️ Admin Login
                 </Button>
               </div>
             </div>

@@ -96,7 +96,7 @@ export function FlagModal({ open, onOpenChange, productId, productName }: FlagMo
                   <FormControl>
                     <Input 
                       type="email" 
-                      placeholder="your.email@iiserbhopal.ac.in" 
+                      placeholder="name23@iiserb.ac.in" 
                       {...field} 
                       data-testid="input-reporter-email"
                     />

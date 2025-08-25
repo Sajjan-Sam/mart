@@ -94,7 +94,7 @@ export function SuggestionModal({ open, onOpenChange }: SuggestionModalProps) {
                   <FormControl>
                     <Input 
                       type="email" 
-                      placeholder="your.email@college.edu" 
+                      placeholder="name23@iiserb.ac.in" 
                       {...field} 
                       data-testid="input-suggestion-email"
                     />

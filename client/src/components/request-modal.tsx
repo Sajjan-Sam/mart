@@ -194,7 +194,7 @@ export function RequestModal({ open, onOpenChange }: RequestModalProps) {
                   <FormControl>
                     <Input 
                       type="email" 
-                      placeholder="your.email@college.edu" 
+                      placeholder="name23@iiserb.ac.in" 
                       {...field} 
                       data-testid="input-email"
                     />
