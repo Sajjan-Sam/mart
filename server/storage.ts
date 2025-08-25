@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Product, type InsertProduct, type Request, type InsertRequest, type Suggestion, type InsertSuggestion } from "@shared/schema";
+import { type User, type InsertUser, type Product, type InsertProduct, type Request, type InsertRequest, type Suggestion, type InsertSuggestion, type Flag, type InsertFlag } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -27,6 +27,14 @@ export interface IStorage {
   createSuggestion(suggestion: InsertSuggestion): Promise<Suggestion>;
   deleteSuggestion(id: string): Promise<boolean>;
 
+  // Flag methods
+  getAllFlags(): Promise<Flag[]>;
+  createFlag(flag: InsertFlag): Promise<Flag>;
+  deleteFlag(id: string): Promise<boolean>;
+
+  // Seller mark as sold
+  markProductAsSoldBySeller(id: string, sellerPhone: string): Promise<Product | undefined>;
+
   // Statistics
   getStats(): Promise<{
     totalProducts: number;
@@ -41,12 +49,14 @@ export class MemStorage implements IStorage {
   private products: Map<string, Product>;
   private requests: Map<string, Request>;
   private suggestions: Map<string, Suggestion>;
+  private flags: Map<string, Flag>;
 
   constructor() {
     this.users = new Map();
     this.products = new Map();
     this.requests = new Map();
     this.suggestions = new Map();
+    this.flags = new Map();
 
     // Add some sample data for testing
     this.seedData();
@@ -228,6 +238,34 @@ export class MemStorage implements IStorage {
 
   async deleteSuggestion(id: string): Promise<boolean> {
     return this.suggestions.delete(id);
+  }
+
+  async getAllFlags(): Promise<Flag[]> {
+    return Array.from(this.flags.values());
+  }
+
+  async createFlag(flag: InsertFlag): Promise<Flag> {
+    const id = randomUUID();
+    const newFlag: Flag = {
+      ...flag,
+      id,
+      createdAt: new Date(),
+    };
+    this.flags.set(id, newFlag);
+    return newFlag;
+  }
+
+  async deleteFlag(id: string): Promise<boolean> {
+    return this.flags.delete(id);
+  }
+
+  async markProductAsSoldBySeller(id: string, sellerPhone: string): Promise<Product | undefined> {
+    const product = this.products.get(id);
+    if (!product || product.sellerPhone !== sellerPhone) return undefined;
+
+    const updatedProduct = { ...product, isSold: true };
+    this.products.set(id, updatedProduct);
+    return updatedProduct;
   }
 
   async getStats(): Promise<{

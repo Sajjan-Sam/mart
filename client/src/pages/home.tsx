@@ -31,7 +31,7 @@ export default function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white py-20">
+      <section className="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="mb-4">
             <span className="inline-block bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium text-white/90 mb-4">
@@ -39,10 +39,10 @@ export default function Home() {
             </span>
           </div>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent" data-testid="title-hero">
-            Student Marketplace
+            HostelMart
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto" data-testid="text-hero-subtitle">
-            Buy and sell hostel items with fellow IISER students. Your trusted campus marketplace.
+            Buy & Sell hostel items with fellow IISER students. Your trusted campus marketplace.
           </p>
           <div className="relative h-64 md:h-96 rounded-2xl overflow-hidden mx-auto max-w-4xl">
             <img 

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -8,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
+import { X, Upload, Image as ImageIcon } from "lucide-react";
 import { insertProductSchema, type InsertProduct } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -26,6 +28,7 @@ interface SellModalProps {
 export function SellModal({ open, onOpenChange }: SellModalProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
   const form = useForm<InsertProduct>({
     resolver: zodResolver(sellFormSchema),
@@ -46,6 +49,25 @@ export function SellModal({ open, onOpenChange }: SellModalProps) {
     },
   });
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files) return;
+
+    const newImageUrls: string[] = [];
+    Array.from(files).forEach((file) => {
+      if (imageUrls.length + newImageUrls.length < 5) {
+        const url = URL.createObjectURL(file);
+        newImageUrls.push(url);
+      }
+    });
+
+    setImageUrls(prev => [...prev, ...newImageUrls].slice(0, 5));
+  };
+
+  const removeImage = (index: number) => {
+    setImageUrls(prev => prev.filter((_, i) => i !== index));
+  };
+
   const createProductMutation = useMutation({
     mutationFn: async (data: InsertProduct) => {
       // Convert rupees to paise
@@ -53,6 +75,7 @@ export function SellModal({ open, onOpenChange }: SellModalProps) {
         ...data,
         price: Math.round(data.price * 100),
         originalPrice: data.originalPrice ? Math.round(data.originalPrice * 100) : undefined,
+        images: imageUrls,
       };
       const response = await apiRequest("POST", "/api/products", productData);
       return response.json();
@@ -63,6 +86,7 @@ export function SellModal({ open, onOpenChange }: SellModalProps) {
         description: "Your item is now available for other students to buy.",
       });
       form.reset();
+      setImageUrls([]);
       onOpenChange(false);
       queryClient.invalidateQueries({ queryKey: ["/api/products"] });
     },
@@ -153,6 +177,59 @@ export function SellModal({ open, onOpenChange }: SellModalProps) {
                 </FormItem>
               )}
             />
+
+            {/* Image Upload Section */}
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Product Images (Max 5)
+                </label>
+                <div className="mt-2">
+                  <label 
+                    htmlFor="image-upload" 
+                    className="flex items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 transition-colors"
+                  >
+                    <div className="text-center">
+                      <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                      <p className="text-sm text-gray-600">Click to upload images</p>
+                      <p className="text-xs text-gray-400">PNG, JPG up to 5 images</p>
+                    </div>
+                  </label>
+                  <input
+                    id="image-upload"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    data-testid="input-image-upload"
+                  />
+                </div>
+              </div>
+
+              {/* Image Preview */}
+              {imageUrls.length > 0 && (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {imageUrls.map((url, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={url}
+                        alt={`Product image ${index + 1}`}
+                        className="w-full h-24 object-cover rounded-lg border border-gray-200"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        data-testid={`button-remove-image-${index}`}
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FormField

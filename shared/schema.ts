@@ -50,6 +50,16 @@ export const suggestions = pgTable("suggestions", {
   createdAt: timestamp("created_at").default(sql`now()`),
 });
 
+export const flags = pgTable("flags", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  productId: varchar("product_id").notNull(),
+  reporterName: text("reporter_name").notNull(),
+  reporterEmail: text("reporter_email").notNull(),
+  reason: text("reason").notNull(), // inappropriate, fake, spam, other
+  description: text("description").notNull(),
+  createdAt: timestamp("created_at").default(sql`now()`),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -79,6 +89,11 @@ export const insertSuggestionSchema = createInsertSchema(suggestions).omit({
   createdAt: true,
 });
 
+export const insertFlagSchema = createInsertSchema(flags).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -91,3 +106,6 @@ export type Request = typeof requests.$inferSelect;
 
 export type InsertSuggestion = z.infer<typeof insertSuggestionSchema>;
 export type Suggestion = typeof suggestions.$inferSelect;
+
+export type InsertFlag = z.infer<typeof insertFlagSchema>;
+export type Flag = typeof flags.$inferSelect;

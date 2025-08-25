@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertProductSchema, insertRequestSchema, insertSuggestionSchema } from "@shared/schema";
+import { insertProductSchema, insertRequestSchema, insertSuggestionSchema, insertFlagSchema } from "@shared/schema";
 import { z } from "zod";
 
 const adminPassword = "iiserhostel2025";
@@ -178,6 +178,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     } catch (error) {
       res.status(500).json({ message: "Failed to delete suggestion" });
+    }
+  });
+
+  // Flag routes
+  app.post("/api/flags", async (req, res) => {
+    try {
+      const flagData = insertFlagSchema.parse(req.body);
+      const flag = await storage.createFlag(flagData);
+      res.status(201).json(flag);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: "Invalid flag data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Failed to create flag" });
+      }
+    }
+  });
+
+  app.get("/api/admin/flags", async (req, res) => {
+    try {
+      const flags = await storage.getAllFlags();
+      res.json(flags);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch flags" });
+    }
+  });
+
+  app.delete("/api/admin/flags/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const success = await storage.deleteFlag(id);
+      if (success) {
+        res.json({ success: true });
+      } else {
+        res.status(404).json({ message: "Flag not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete flag" });
+    }
+  });
+
+  // Seller mark as sold
+  app.patch("/api/products/:id/mark-sold", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { sellerPhone } = req.body;
+      const product = await storage.markProductAsSoldBySeller(id, sellerPhone);
+      if (product) {
+        res.json(product);
+      } else {
+        res.status(404).json({ message: "Product not found or invalid seller" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Failed to mark product as sold" });
     }
   });
 

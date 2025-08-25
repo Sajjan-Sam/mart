@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Store, LogOut, Package, Clock, Users, IndianRupee } from "lucide-react";
-import { type Product, type Request, type Suggestion } from "@shared/schema";
+import { Store, LogOut, Package, Clock, Users, IndianRupee, Flag } from "lucide-react";
+import { type Product, type Request, type Suggestion, type Flag as FlagType } from "@shared/schema";
 import { formatCurrency, getUrgencyColor, getPriorityColor } from "@/lib/utils";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -33,6 +33,10 @@ export default function Admin() {
 
   const { data: suggestions, isLoading: suggestionsLoading } = useQuery<Suggestion[]>({
     queryKey: ["/api/admin/suggestions"],
+  });
+
+  const { data: flags, isLoading: flagsLoading } = useQuery<FlagType[]>({
+    queryKey: ["/api/admin/flags"],
   });
 
   const deleteProductMutation = useMutation({
@@ -119,7 +123,27 @@ export default function Admin() {
     },
   });
 
-  if (statsLoading || productsLoading || requestsLoading || suggestionsLoading) {
+  const deleteFlagMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await apiRequest("DELETE", `/api/admin/flags/${id}`);
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Flag deleted successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/flags"] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to delete flag",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  if (statsLoading || productsLoading || requestsLoading || suggestionsLoading || flagsLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -420,6 +444,86 @@ export default function Admin() {
                               data-testid={`button-delete-suggestion-${suggestion.id}`}
                             >
                               Delete
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Flags Table */}
+            <Card className="shadow-lg border-0">
+              <CardHeader className="bg-gradient-to-r from-red-50 to-orange-50 border-b">
+                <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-2" data-testid="title-reported-items">
+                  <Flag className="h-5 w-5 text-red-600" />
+                  Reported Items
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Reporter</TableHead>
+                        <TableHead>Product ID</TableHead>
+                        <TableHead>Reason</TableHead>
+                        <TableHead>Description</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {flags?.map((flag) => (
+                        <TableRow key={flag.id} data-testid={`row-flag-${flag.id}`}>
+                          <TableCell data-testid={`cell-flag-reporter-${flag.id}`}>
+                            <div>
+                              <div className="font-medium">{flag.reporterName}</div>
+                              <div className="text-xs text-gray-500">{flag.reporterEmail}</div>
+                            </div>
+                          </TableCell>
+                          <TableCell data-testid={`cell-flag-product-${flag.id}`}>
+                            <code className="bg-gray-100 px-2 py-1 rounded text-xs">
+                              {flag.productId.slice(0, 8)}...
+                            </code>
+                          </TableCell>
+                          <TableCell>
+                            <Badge 
+                              variant={flag.reason === 'inappropriate' ? 'destructive' : 'secondary'}
+                              data-testid={`badge-flag-reason-${flag.id}`}
+                            >
+                              {flag.reason}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="max-w-xs truncate" data-testid={`cell-flag-description-${flag.id}`}>
+                            {flag.description}
+                          </TableCell>
+                          <TableCell data-testid={`cell-flag-date-${flag.id}`}>
+                            {new Date(flag.createdAt!).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell className="space-x-2">
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => {
+                                deleteProductMutation.mutate(flag.productId);
+                                deleteFlagMutation.mutate(flag.id);
+                              }}
+                              disabled={deleteProductMutation.isPending || deleteFlagMutation.isPending}
+                              data-testid={`button-delete-flagged-product-${flag.id}`}
+                            >
+                              Delete Product
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => deleteFlagMutation.mutate(flag.id)}
+                              disabled={deleteFlagMutation.isPending}
+                              data-testid={`button-dismiss-flag-${flag.id}`}
+                            >
+                              Dismiss Flag
                             </Button>
                           </TableCell>
                         </TableRow>
