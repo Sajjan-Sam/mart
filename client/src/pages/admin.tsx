@@ -1,0 +1,415 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Link } from "wouter";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Store, LogOut, Package, Clock, Users, IndianRupee } from "lucide-react";
+import { type Product, type Request, type Suggestion } from "@shared/schema";
+import { formatCurrency, getUrgencyColor, getPriorityColor } from "@/lib/utils";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+
+export default function Admin() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const { data: stats, isLoading: statsLoading } = useQuery<{
+    totalProducts: number;
+    pendingRequests: number;
+    activeSellers: number;
+    totalValue: number;
+  }>({
+    queryKey: ["/api/admin/stats"],
+  });
+
+  const { data: products, isLoading: productsLoading } = useQuery<Product[]>({
+    queryKey: ["/api/admin/products"],
+  });
+
+  const { data: requests, isLoading: requestsLoading } = useQuery<Request[]>({
+    queryKey: ["/api/admin/requests"],
+  });
+
+  const { data: suggestions, isLoading: suggestionsLoading } = useQuery<Suggestion[]>({
+    queryKey: ["/api/admin/suggestions"],
+  });
+
+  const deleteProductMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await apiRequest("DELETE", `/api/admin/products/${id}`);
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Product deleted successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/products"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/stats"] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to delete product",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const markSoldMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await apiRequest("PATCH", `/api/admin/products/${id}/sold`);
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Product marked as sold",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/products"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/stats"] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to mark product as sold",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const approveRequestMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await apiRequest("PATCH", `/api/admin/requests/${id}/approve`);
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Request approved successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/requests"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/requests"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/stats"] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to approve request",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteSuggestionMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await apiRequest("DELETE", `/api/admin/suggestions/${id}`);
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Suggestion deleted successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/suggestions"] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to delete suggestion",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  if (statsLoading || productsLoading || requestsLoading || suggestionsLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading admin dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link href="/" className="flex items-center space-x-2">
+              <Store className="h-8 w-8 text-primary" />
+              <span className="text-2xl font-bold text-primary">HostelMart Admin</span>
+            </Link>
+            
+            <Link href="/">
+              <Button variant="outline" className="flex items-center gap-2" data-testid="button-logout">
+                <LogOut className="h-4 w-4" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-6" data-testid="title-admin-dashboard">
+            Admin Dashboard
+          </h1>
+
+          {/* Dashboard Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Total Products</p>
+                    <p className="text-3xl font-bold text-primary" data-testid="stat-total-products">
+                      {stats?.totalProducts || 0}
+                    </p>
+                  </div>
+                  <Package className="h-8 w-8 text-primary opacity-75" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Pending Requests</p>
+                    <p className="text-3xl font-bold text-accent" data-testid="stat-pending-requests">
+                      {stats?.pendingRequests || 0}
+                    </p>
+                  </div>
+                  <Clock className="h-8 w-8 text-accent opacity-75" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Active Sellers</p>
+                    <p className="text-3xl font-bold text-secondary" data-testid="stat-active-sellers">
+                      {stats?.activeSellers || 0}
+                    </p>
+                  </div>
+                  <Users className="h-8 w-8 text-secondary opacity-75" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Total Value</p>
+                    <p className="text-3xl font-bold text-green-600" data-testid="stat-total-value">
+                      {stats?.totalValue ? formatCurrency(stats.totalValue) : "₹0"}
+                    </p>
+                  </div>
+                  <IndianRupee className="h-8 w-8 text-green-600 opacity-75" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Admin Tables */}
+          <div className="space-y-8">
+            {/* Products Table */}
+            <Card>
+              <CardHeader>
+                <CardTitle data-testid="title-products-management">Products Management</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Product</TableHead>
+                        <TableHead>Price</TableHead>
+                        <TableHead>Seller</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {products?.map((product) => (
+                        <TableRow key={product.id} data-testid={`row-product-${product.id}`}>
+                          <TableCell data-testid={`cell-product-name-${product.id}`}>
+                            {product.name}
+                          </TableCell>
+                          <TableCell data-testid={`cell-product-price-${product.id}`}>
+                            {formatCurrency(product.price)}
+                          </TableCell>
+                          <TableCell data-testid={`cell-product-seller-${product.id}`}>
+                            {product.sellerName}
+                          </TableCell>
+                          <TableCell>
+                            <Badge 
+                              variant={product.isSold ? "secondary" : "default"}
+                              data-testid={`badge-product-status-${product.id}`}
+                            >
+                              {product.isSold ? "Sold" : "Active"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="space-x-2">
+                            {!product.isSold && (
+                              <Button
+                                size="sm"
+                                onClick={() => markSoldMutation.mutate(product.id)}
+                                disabled={markSoldMutation.isPending}
+                                className="bg-secondary hover:bg-secondary/90"
+                                data-testid={`button-mark-sold-${product.id}`}
+                              >
+                                Mark Sold
+                              </Button>
+                            )}
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => deleteProductMutation.mutate(product.id)}
+                              disabled={deleteProductMutation.isPending}
+                              data-testid={`button-delete-product-${product.id}`}
+                            >
+                              Delete
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Requests Table */}
+            <Card>
+              <CardHeader>
+                <CardTitle data-testid="title-item-requests">Item Requests</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Item</TableHead>
+                        <TableHead>Max Price</TableHead>
+                        <TableHead>Urgency</TableHead>
+                        <TableHead>Requester</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {requests?.map((request) => (
+                        <TableRow key={request.id} data-testid={`row-request-${request.id}`}>
+                          <TableCell data-testid={`cell-request-title-${request.id}`}>
+                            {request.title}
+                          </TableCell>
+                          <TableCell data-testid={`cell-request-max-price-${request.id}`}>
+                            {formatCurrency(request.maxPrice)}
+                          </TableCell>
+                          <TableCell>
+                            <Badge 
+                              className={getUrgencyColor(request.urgency)}
+                              data-testid={`badge-request-urgency-${request.id}`}
+                            >
+                              {request.urgency}
+                            </Badge>
+                          </TableCell>
+                          <TableCell data-testid={`cell-request-email-${request.id}`}>
+                            {request.requesterEmail}
+                          </TableCell>
+                          <TableCell>
+                            <Badge 
+                              variant={request.isApproved ? "default" : "secondary"}
+                              data-testid={`badge-request-status-${request.id}`}
+                            >
+                              {request.isApproved ? "Approved" : "Pending"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {!request.isApproved && (
+                              <Button
+                                size="sm"
+                                onClick={() => approveRequestMutation.mutate(request.id)}
+                                disabled={approveRequestMutation.isPending}
+                                data-testid={`button-approve-request-${request.id}`}
+                              >
+                                Approve
+                              </Button>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Suggestions Table */}
+            <Card>
+              <CardHeader>
+                <CardTitle data-testid="title-user-suggestions">User Suggestions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Category</TableHead>
+                        <TableHead>Priority</TableHead>
+                        <TableHead>Description</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {suggestions?.map((suggestion) => (
+                        <TableRow key={suggestion.id} data-testid={`row-suggestion-${suggestion.id}`}>
+                          <TableCell data-testid={`cell-suggestion-name-${suggestion.id}`}>
+                            {suggestion.name}
+                          </TableCell>
+                          <TableCell data-testid={`cell-suggestion-category-${suggestion.id}`}>
+                            {suggestion.category}
+                          </TableCell>
+                          <TableCell>
+                            <Badge 
+                              className={getPriorityColor(suggestion.priority)}
+                              data-testid={`badge-suggestion-priority-${suggestion.id}`}
+                            >
+                              {suggestion.priority}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="max-w-xs truncate" data-testid={`cell-suggestion-description-${suggestion.id}`}>
+                            {suggestion.description}
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => deleteSuggestionMutation.mutate(suggestion.id)}
+                              disabled={deleteSuggestionMutation.isPending}
+                              data-testid={`button-delete-suggestion-${suggestion.id}`}
+                            >
+                              Delete
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
