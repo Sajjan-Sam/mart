@@ -51,7 +51,7 @@ export default function Home() {
           </p>
           <div className="relative h-64 md:h-96 rounded-2xl overflow-hidden mx-auto max-w-4xl">
             <img 
-              src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600" 
+              src="https://dair.iiserb.ac.in/images/home_slide/18.jpg" 
               alt="University campus with students" 
               className="w-full h-full object-cover"
               data-testid="img-hero-campus"

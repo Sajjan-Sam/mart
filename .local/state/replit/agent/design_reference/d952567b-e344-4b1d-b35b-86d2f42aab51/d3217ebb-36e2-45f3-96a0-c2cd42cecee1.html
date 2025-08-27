@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HostelMart - Student Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981', 
+                        accent: '#F97316',
+                        danger: '#EF4444'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="font-inter bg-gray-50 min-h-screen">
+    <!-- @COMPONENT: Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <div class="text-2xl font-bold text-primary">
+                        <i class="fas fa-store mr-2"></i>HostelMart
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-6">
+                    <button data-event="click:showRequestForm" class="bg-secondary text-white px-4 py-2 rounded-lg font-medium hover:bg-green-600 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Request Item
+                    </button>
+                    <button data-event="click:showSuggestionForm" class="bg-accent text-white px-4 py-2 rounded-lg font-medium hover:bg-orange-600 transition-colors">
+                        <i class="fas fa-lightbulb mr-2"></i>Suggestions
+                    </button>
+                    <button data-event="click:showAdminLogin" class="text-gray-600 hover:text-primary transition-colors">
+                        <i class="fas fa-user-shield mr-1"></i>Admin
+                    </button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <button class="md:hidden text-gray-600 hover:text-primary" data-event="click:toggleMobileMenu">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Mobile menu -->
+            <div id="mobileMenu" class="md:hidden hidden border-t border-gray-200 py-4">
+                <div class="space-y-3">
+                    <button data-event="click:showRequestForm" class="w-full bg-secondary text-white px-4 py-2 rounded-lg font-medium">
+                        <i class="fas fa-plus mr-2"></i>Request Item
+                    </button>
+                    <button data-event="click:showSuggestionForm" class="w-full bg-accent text-white px-4 py-2 rounded-lg font-medium">
+                        <i class="fas fa-lightbulb mr-2"></i>Suggestions
+                    </button>
+                    <button data-event="click:showAdminLogin" class="w-full text-gray-600 border border-gray-300 px-4 py-2 rounded-lg">
+                        <i class="fas fa-user-shield mr-1"></i>Admin Login
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- @END_COMPONENT: Header -->
+
+    <!-- @COMPONENT: HeroSection -->
+    <section class="bg-gradient-to-br from-primary to-blue-600 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                Student Marketplace
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 text-blue-100">
+                Buy and sell hostel items with fellow students
+            </p>
+            <!-- A vibrant university campus courtyard with students socializing and modern buildings -->
+            <div class="relative h-64 md:h-96 rounded-2xl overflow-hidden mx-auto max-w-4xl">
+                <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600" 
+                     alt="University campus with students" 
+                     class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: HeroSection -->
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- @COMPONENT: ProductGrid -->
+        <div id="publicView">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Available Items</h2>
+                <div class="text-sm text-gray-600">
+                    <span data-bind="products.length" data-mock="true">12</span> items available
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="mb-8 flex flex-col md:flex-row gap-4">
+                <div class="flex-1">
+                    <input type="text" placeholder="Search items..." 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                </div>
+                <select class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                    <option>All Categories</option>
+                    <option>Electronics</option>
+                    <option>Books</option>
+                    <option>Furniture</option>
+                    <option>Clothing</option>
+                    <option>Sports</option>
+                    <option>Kitchen</option>
+                </select>
+            </div>
+
+            <!-- Product Grid -->
+            <!-- @MAP: products.map(product => ( -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+                
+                <!-- Product Card 1 -->
+                <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                    <!-- A modern study desk with laptop and books in a dorm room -->
+                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                         alt="Study desk" 
+                         class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg text-gray-900 mb-2" data-bind="product.name" data-mock="true">Study Desk</h3>
+                        <p class="text-2xl font-bold text-primary mb-3" data-bind="product.price" data-mock="true">₹2,500</p>
+                        <p class="text-sm text-gray-600 mb-4" data-bind="product.description" data-mock="true">Perfect condition desk for studying</p>
+                        <button data-event="click:contactSeller" data-implementation="Open WhatsApp with +91 XXXXX XXXXX and pre-filled message" 
+                                class="w-full bg-secondary text-white py-2 rounded-lg font-medium hover:bg-green-600 transition-colors">
+                            <i class="fab fa-whatsapp mr-2"></i>Contact Seller
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                    <!-- A stack of engineering textbooks on a wooden surface -->
+                    <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                         alt="Engineering textbooks" 
+                         class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg text-gray-900 mb-2" data-mock="true">Engineering Books Set</h3>
+                        <p class="text-2xl font-bold text-primary mb-3" data-mock="true">₹1,200</p>
+                        <p class="text-sm text-gray-600 mb-4" data-mock="true">Complete set for 3rd semester</p>
+                        <button data-event="click:contactSeller" 
+                                class="w-full bg-secondary text-white py-2 rounded-lg font-medium hover:bg-green-600 transition-colors">
+                            <i class="fab fa-whatsapp mr-2"></i>Contact Seller
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                    <!-- A gaming chair in a modern dorm room setup -->
+                    <img src="https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                         alt="Gaming chair" 
+                         class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg text-gray-900 mb-2" data-mock="true">Gaming Chair</h3>
+                        <p class="text-2xl font-bold text-primary mb-3" data-mock="true">₹8,000</p>
+                        <p class="text-sm text-gray-600 mb-4" data-mock="true">Ergonomic chair, barely used</p>
+                        <button data-event="click:contactSeller" 
+                                class="w-full bg-secondary text-white py-2 rounded-lg font-medium hover:bg-green-600 transition-colors">
+                            <i class="fab fa-whatsapp mr-2"></i>Contact Seller
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Card 4 -->
+                <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                    <!-- A collection of kitchen utensils and appliances -->
+                    <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                         alt="Kitchen utensils" 
+                         class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg text-gray-900 mb-2" data-mock="true">Kitchen Set</h3>
+                        <p class="text-2xl font-bold text-primary mb-3" data-mock="true">₹1,500</p>
+                        <p class="text-sm text-gray-600 mb-4" data-mock="true">Complete cooking essentials</p>
+                        <button data-event="click:contactSeller" 
+                                class="w-full bg-secondary text-white py-2 rounded-lg font-medium hover:bg-green-600 transition-colors">
+                            <i class="fab fa-whatsapp mr-2"></i>Contact Seller
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Card 5 -->
+                <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                    <!-- A modern laptop on a clean desk in a dorm -->
+                    <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                         alt="Laptop computer" 
+                         class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg text-gray-900 mb-2" data-mock="true">Laptop - Dell</h3>
+                        <p class="text-2xl font-bold text-primary mb-3" data-mock="true">₹35,000</p>
+                        <p class="text-sm text-gray-600 mb-4" data-mock="true">i5 processor, 8GB RAM, good condition</p>
+                        <button data-event="click:contactSeller" 
+                                class="w-full bg-secondary text-white py-2 rounded-lg font-medium hover:bg-green-600 transition-colors">
+                            <i class="fab fa-whatsapp mr-2"></i>Contact Seller
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Card 6 -->
+                <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                    <!-- A bicycle parked near a college dormitory -->
+                    <img src="https://pixabay.com/get/g25d7801b246852e8addad155995e6805b4865a55734dbb3f3a1db0b24f8d2fd3b44dfbfd5499c7c1b2734569bc7880bdc47226d7c6bf3183463115d55eacd364_1280.jpg" 
+                         alt="Bicycle" 
+                         class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg text-gray-900 mb-2" data-mock="true">Bicycle</h3>
+                        <p class="text-2xl font-bold text-primary mb-3" data-mock="true">₹6,500</p>
+                        <p class="text-sm text-gray-600 mb-4" data-mock="true">Great for campus commuting</p>
+                        <button data-event="click:contactSeller" 
+                                class="w-full bg-secondary text-white py-2 rounded-lg font-medium hover:bg-green-600 transition-colors">
+                            <i class="fab fa-whatsapp mr-2"></i>Contact Seller
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Card 7 -->
+                <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                    <!-- A mini refrigerator in a modern dorm room -->
+                    <img src="https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                         alt="Mini refrigerator" 
+                         class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg text-gray-900 mb-2" data-mock="true">Mini Fridge</h3>
+                        <p class="text-2xl font-bold text-primary mb-3" data-mock="true">₹4,500</p>
+                        <p class="text-sm text-gray-600 mb-4" data-mock="true">Perfect for dorm room</p>
+                        <button data-event="click:contactSeller" 
+                                class="w-full bg-secondary text-white py-2 rounded-lg font-medium hover:bg-green-600 transition-colors">
+                            <i class="fab fa-whatsapp mr-2"></i>Contact Seller
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Card 8 -->
+                <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                    <!-- A collection of casual student clothing on hangers -->
+                    <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300" 
+                         alt="Student clothing" 
+                         class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg text-gray-900 mb-2" data-mock="true">Clothing Bundle</h3>
+                        <p class="text-2xl font-bold text-primary mb-3" data-mock="true">₹800</p>
+                        <p class="text-sm text-gray-600 mb-4" data-mock="true">T-shirts and jeans, size M</p>
+                        <button data-event="click:contactSeller" 
+                                class="w-full bg-secondary text-white py-2 rounded-lg font-medium hover:bg-green-600 transition-colors">
+                            <i class="fab fa-whatsapp mr-2"></i>Contact Seller
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+            <!-- @END_MAP )) -->
+        </div>
+        <!-- @END_COMPONENT: ProductGrid -->
+
+        <!-- @COMPONENT: AdminDashboard -->
+        <div id="adminView" class="hidden">
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-bold text-gray-900">Admin Dashboard</h2>
+                    <button data-event="click:logout" class="bg-danger text-white px-4 py-2 rounded-lg font-medium hover:bg-red-600 transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </div>
+
+                <!-- Dashboard Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600">Total Products</p>
+                                <p class="text-3xl font-bold text-primary" data-bind="stats.totalProducts" data-mock="true">24</p>
+                            </div>
+                            <i class="fas fa-box text-4xl text-primary opacity-20"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600">Pending Requests</p>
+                                <p class="text-3xl font-bold text-accent" data-bind="stats.pendingRequests" data-mock="true">8</p>
+                            </div>
+                            <i class="fas fa-clock text-4xl text-accent opacity-20"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600">Active Sellers</p>
+                                <p class="text-3xl font-bold text-secondary" data-bind="stats.activeSellers" data-mock="true">12</p>
+                            </div>
+                            <i class="fas fa-users text-4xl text-secondary opacity-20"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600">Total Value</p>
+                                <p class="text-3xl font-bold text-green-600" data-bind="stats.totalValue" data-mock="true">₹1,24,500</p>
+                            </div>
+                            <i class="fas fa-rupee-sign text-4xl text-green-600 opacity-20"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Tables -->
+                <div class="space-y-8">
+                    <!-- Products Table -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-xl font-semibold text-gray-900">Products Management</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Seller</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200" data-mock="true">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">Study Desk</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">₹2,500</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">Rahul Kumar</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Active</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap space-x-2">
+                                            <button data-event="click:markSold" class="bg-secondary text-white px-3 py-1 rounded text-sm hover:bg-green-600">Mark Sold</button>
+                                            <button data-event="click:deleteProduct" class="bg-danger text-white px-3 py-1 rounded text-sm hover:bg-red-600">Delete</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">Engineering Books</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">₹1,200</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">Priya Sharma</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Active</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap space-x-2">
+                                            <button data-event="click:markSold" class="bg-secondary text-white px-3 py-1 rounded text-sm hover:bg-green-600">Mark Sold</button>
+                                            <button data-event="click:deleteProduct" class="bg-danger text-white px-3 py-1 rounded text-sm hover:bg-red-600">Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Requests Table -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-xl font-semibold text-gray-900">Item Requests</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Item</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Max Price</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Urgency</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Requester</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200" data-mock="true">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">Second-hand Laptop</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">₹25,000</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">High</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">Amit Singh</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <button data-event="click:approveRequest" class="bg-primary text-white px-3 py-1 rounded text-sm hover:bg-blue-600">Approve</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">Study Table</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">₹3,000</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">Medium</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">Sneha Patel</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <button data-event="click:approveRequest" class="bg-primary text-white px-3 py-1 rounded text-sm hover:bg-blue-600">Approve</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Suggestions Table -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-xl font-semibold text-gray-900">User Suggestions</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200" data-mock="true">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">Rajesh Kumar</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">New Feature</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">High</span>
+                                        </td>
+                                        <td class="px-6 py-4 max-w-xs truncate">Add wishlist functionality for items</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <button data-event="click:deleteSuggestion" class="bg-danger text-white px-3 py-1 rounded text-sm hover:bg-red-600">Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: AdminDashboard -->
+
+    </main>
+
+    <!-- @COMPONENT: RequestModal -->
+    <div id="requestModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Request an Item</h3>
+                    <button data-event="click:closeModal" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <form data-implementation="Form should validate inputs and submit to server">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Product Title</label>
+                            <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="What are you looking for?">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <select required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                <option value="">Select category</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="books">Books</option>
+                                <option value="furniture">Furniture</option>
+                                <option value="clothing">Clothing</option>
+                                <option value="sports">Sports</option>
+                                <option value="kitchen">Kitchen</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                            <textarea required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" rows="3" placeholder="Describe the item you need"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Maximum Price (₹)</label>
+                            <input type="number" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter max price in rupees">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Urgency</label>
+                            <select required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                <option value="">Select urgency</option>
+                                <option value="low">Low - Can wait</option>
+                                <option value="medium">Medium - Needed soon</option>
+                                <option value="high">High - Urgent</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Contact Email</label>
+                            <input type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="your.email@college.edu">
+                        </div>
+
+                        <button type="submit" class="w-full bg-secondary text-white py-3 rounded-lg font-medium hover:bg-green-600 transition-colors">
+                            <i class="fas fa-paper-plane mr-2"></i>Submit Request
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: RequestModal -->
+
+    <!-- @COMPONENT: SuggestionModal -->
+    <div id="suggestionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Share Your Suggestion</h3>
+                    <button data-event="click:closeModal" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <form data-implementation="Form should validate inputs and submit to server">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                            <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Your name">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="your.email@college.edu">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <select required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                <option value="">Select category</option>
+                                <option value="new-feature">New Feature</option>
+                                <option value="ui">UI Improvement</option>
+                                <option value="security">Security</option>
+                                <option value="mobile-app">Mobile App</option>
+                                <option value="search-filter">Search and Filter</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+                            <select required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                                <option value="">Select priority</option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Detailed Description</label>
+                            <textarea required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" rows="4" placeholder="Describe your suggestion in detail"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-accent text-white py-3 rounded-lg font-medium hover:bg-orange-600 transition-colors">
+                            <i class="fas fa-lightbulb mr-2"></i>Submit Suggestion
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: SuggestionModal -->
+
+    <!-- @COMPONENT: AdminLoginModal -->
+    <div id="adminLoginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-sm w-full">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Admin Login</h3>
+                    <button data-event="click:closeModal" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <form data-implementation="Form should authenticate admin credentials">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                            <input type="password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter admin password">
+                        </div>
+
+                        <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: AdminLoginModal -->
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="text-2xl font-bold mb-4">
+                    <i class="fas fa-store mr-2"></i>HostelMart
+                </div>
+                <p class="text-gray-400 mb-4">Making hostel life easier, one transaction at a time</p>
+                <div class="text-sm text-gray-500">
+                    © 2024 HostelMart. Built for students, by students.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            // TODO: Implement proper state management and API integration
+            
+            // Modal management
+            function showModal(modalId) {
+                document.getElementById(modalId).classList.remove('hidden');
+            }
+            
+            function hideModal(modalId) {
+                document.getElementById(modalId).classList.add('hidden');
+            }
+
+            // Mobile menu toggle
+            function toggleMobileMenu() {
+                const menu = document.getElementById('mobileMenu');
+                menu.classList.toggle('hidden');
+            }
+
+            // View switching
+            function showAdminView() {
+                document.getElementById('publicView').classList.add('hidden');
+                document.getElementById('adminView').classList.remove('hidden');
+            }
+
+            function showPublicView() {
+                document.getElementById('publicView').classList.remove('hidden');
+                document.getElementById('adminView').classList.add('hidden');
+            }
+
+            // WhatsApp contact function
+            function contactSeller(phone, productName) {
+                const message = `Hi! I'm interested in buying your ${productName} that I saw on HostelMart. Is it still available?`;
+                const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+                window.open(url, '_blank');
+            }
+
+            // Event delegation for dynamic elements
+            document.addEventListener('click', function(e) {
+                const target = e.target.closest('[data-event]');
+                if (!target) return;
+
+                const event = target.getAttribute('data-event');
+                
+                switch(event) {
+                    case 'click:showRequestForm':
+                        showModal('requestModal');
+                        break;
+                    case 'click:showSuggestionForm':
+                        showModal('suggestionModal');
+                        break;
+                    case 'click:showAdminLogin':
+                        showModal('adminLoginModal');
+                        break;
+                    case 'click:closeModal':
+                        const modal = target.closest('.fixed');
+                        if (modal) modal.classList.add('hidden');
+                        break;
+                    case 'click:toggleMobileMenu':
+                        toggleMobileMenu();
+                        break;
+                    case 'click:contactSeller':
+                        // TODO: Get actual seller phone from data
+                        contactSeller('+919876543210', 'Product Name');
+                        break;
+                    case 'click:logout':
+                        showPublicView();
+                        break;
+                    case 'click:markSold':
+                        // TODO: Implement mark as sold functionality
+                        console.log('Mark as sold clicked');
+                        break;
+                    case 'click:deleteProduct':
+                        // TODO: Implement delete product functionality
+                        console.log('Delete product clicked');
+                        break;
+                    case 'click:approveRequest':
+                        // TODO: Implement approve request functionality
+                        console.log('Approve request clicked');
+                        break;
+                    case 'click:deleteSuggestion':
+                        // TODO: Implement delete suggestion functionality
+                        console.log('Delete suggestion clicked');
+                        break;
+                }
+            });
+
+            // Form submissions
+            document.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (e.target.closest('#requestModal')) {
+                    // TODO: Handle request form submission
+                    alert('Request submitted successfully! Admin will review and approve it.');
+                    hideModal('requestModal');
+                } else if (e.target.closest('#suggestionModal')) {
+                    // TODO: Handle suggestion form submission
+                    alert('Thank you for your suggestion! We value your feedback.');
+                    hideModal('suggestionModal');
+                } else if (e.target.closest('#adminLoginModal')) {
+                    // TODO: Handle admin login authentication
+                    const password = e.target.querySelector('input[type="password"]').value;
+                    if (password === 'admin123') { // Mock authentication
+                        showAdminView();
+                        hideModal('adminLoginModal');
+                    } else {
+                        alert('Invalid password');
+                    }
+                }
+            });
+
+            // Close modals when clicking outside
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('fixed') && e.target.classList.contains('bg-black')) {
+                    e.target.classList.add('hidden');
+                }
+            });
+
+        })();
+    </script>
+</body>
+</html>
